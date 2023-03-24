@@ -4,7 +4,8 @@
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
-#define NUM_SIZE 250
+#define NUM_SIZE 100
+#define BAR_WIDTH 10
 #define RECT_X_OFFSET 10
 #define RECT_Y_OFFSET 100 
 #define RECT_MAX_HEIGHT 500
@@ -20,6 +21,8 @@ struct Bar rects[NUM_SIZE];
 // Colors
 SDL_Color bgColor = { .r = 0, .g = 0, .b = 0, .a = 255 };
 SDL_Color orange = { .r = 255, .g = 153, .b = 146, .a = 255 };
+SDL_Color green = { .r = 0, .g = 255, .b = 100, .a = 255 };
+SDL_Color purple = { .r = 163, .g = 48, .b = 255, .a = 255 };
 
 // Getting Delta Time
 Uint64 currentTime;
@@ -32,6 +35,9 @@ int initSDL();
 void initArray();
 void drawRects();
 double getDeltaTime();
+
+SDL_Color getRandomColor();
+Uint32 SDLColorToUint32(SDL_Color color);
 
 // Sorting Methods
 void startSort();

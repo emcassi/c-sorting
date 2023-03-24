@@ -102,10 +102,10 @@
    ```sh
    make # Compile
    ./csorting # Run
-   ```
-3. Or Compile and run with
-   ```sh
-    sh run.sh
+
+   # # OR # # 
+
+    sh run.sh # Compile and run
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -114,7 +114,7 @@
 ## Roadmap
 
 - [X] Generate bars of random lengths and render them on the screen
-- [ ] Show steps of bubble sort
+- [X] Show steps of bubble sort
 - [ ] Add Features
   - [ ] Add ability to reset the array and start over
   - [ ] Add ability to change number of bars in array
