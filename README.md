@@ -33,10 +33,10 @@
     <!-- <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
   </a>
 
-<h1 align="center">C Sorting ( See Sorting )</h1>
+<h1 align="center">C Sorting</h1>
 
   <p align="center">
-    C Sorting is a sorting algorithm visualizer written in C.
+    C Sorting (See Sorting) is a sorting algorithm visualizer written in C.
     <br />
     <a href="https://github.com/emcassi/c-sorting"><strong>Explore the docs »</strong></a>
     <br />
@@ -100,7 +100,12 @@
    ```
 2. Compile and run the project
    ```sh
-   make && ./csorting
+   make # Compile
+   ./csorting # Run
+   ```
+3. Or Compile and run with
+   ```sh
+    sh run.sh
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
