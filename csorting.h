@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include "bar.h"
 
 // Macros 
 
@@ -15,7 +15,7 @@ SDL_Surface* surface = NULL;
 SDL_Renderer* renderer = NULL;
 
 // The rects we'll put in order
-SDL_Rect rects[NUM_SIZE];
+struct Bar rects[NUM_SIZE];
 
 // Colors
 SDL_Color bgColor = { .r = 0, .g = 0, .b = 0, .a = 255 };
@@ -32,3 +32,11 @@ int initSDL();
 void initArray();
 void drawRects();
 double getDeltaTime();
+
+// Sorting Methods
+void startSort();
+void bubbleSort();
+void finishSort();
+
+// Just a fun method that cycles through the bars changing colors
+void discoBars();
