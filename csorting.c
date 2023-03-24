@@ -14,6 +14,8 @@ int main(int argc, char ** argv){
         SDL_UpdateWindowSurface(window);
         initArray();
 
+
+
         while (!quit)
         {
             double dt = getDeltaTime();
@@ -78,17 +80,17 @@ void initArray(){
             .w = 2, 
             .h = height
         };
-        rects[i] = rect;
+        rects[i].rect = rect;
+        rects[i].color = orange;
     }
 }
 
 void drawRects(){
 
-    SDL_SetRenderDrawColor(renderer, orange.r, orange.g, orange.b, orange.a);
-
     for(int i = 0; i < NUM_SIZE; i++){
+        SDL_SetRenderDrawColor(renderer, rects[i].color.r, rects[i].color.g, rects[i].color.b, rects[i].color.a);
+        SDL_RenderDrawRect(renderer, &rects[i].rect);
 
-        SDL_RenderDrawRect(renderer, &rects[i]);
     }
     SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 }
@@ -102,7 +104,30 @@ void render(){
 }
 
 void update(double deltaTime){
+    bubbleSort();
+}
 
+SDL_Color getRandomColor(){
+    SDL_Color color;
+    color.r = rand() % 255;
+    color.g = rand() % 255;
+    color.b = rand() % 255;
+    color.a = rand() % 255;
+    return color;
+}
+
+int i = 0, j = 0;
+void bubbleSort(){
+    
+}
+
+void discoBars(){
+    if(i < NUM_SIZE){
+        rects[i].color = getRandomColor();
+        i++;
+    }
+
+    SDL_Delay(25);
 }
 
 double getDeltaTime(){
@@ -110,3 +135,4 @@ double getDeltaTime(){
     currentTime = SDL_GetPerformanceCounter();
     return (double)((currentTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency() );
 }
+
