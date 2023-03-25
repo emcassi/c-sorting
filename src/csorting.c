@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "csorting.h"
+#include "../include/csorting.h"
+#include <time.h>
 
 int main(int argc, char ** argv){
 
@@ -14,12 +15,8 @@ int main(int argc, char ** argv){
         SDL_UpdateWindowSurface(window);
         initArray();
 
-
-
         while (!quit)
         {
-            double dt = getDeltaTime();
-            
             while(SDL_PollEvent(&event)){
                 switch(event.type){
                     case SDL_QUIT:
@@ -30,19 +27,43 @@ int main(int argc, char ** argv){
                             case SDLK_ESCAPE:
                                 quit = 1;
                                 break;
+                            case SDLK_SPACE:
+                                if(sorting)
+                                    sorting = 0;
+                                else
+                                    sorting = 1;
+                                break;
+                            case SDLK_UP:
+                                sortDelay += sortDelayIncrement;
+                                if(sortDelay > maxSortDelay)
+                                    sortDelay = maxSortDelay;
+                                break;
+                            case SDLK_DOWN:
+                                sortDelay -= sortDelayIncrement;
+                                if(sortDelay <= 0)
+                                    sortDelay = 0;
+                                break;
                         }
                         break;
                 }
             }
 
-            bubbleSort();
+            printf("Current Delay: %d. Press UP or DOWN to change sorting speed\n", sortDelay);
+
+            if(sorting) {
+                bubbleSort();
+            }else if(finalizing) {
+                finishSort();
+            } else {
+                discoBars();
+            }
+
             render();
         }
 
-        SDL_DestroyWindow(window);
     }
-    
-    SDL_Quit();
+
+    stop();    
 
     return 0;
 }
@@ -53,7 +74,7 @@ int initSDL(){
         printf("SDL could not initialize SDL: %s\n", SDL_GetError());
         success = 0;
     } else {
-        window = SDL_CreateWindow("My SDL Window", SDL_WINDOWPOS_UNDEFINED, 
+        window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 
         if(window == NULL){
@@ -80,7 +101,7 @@ void initArray(){
             .h = height
         };
         rects[i].rect = rect;
-        rects[i].color = orange;
+        rects[i].color = white;
     }
 }
 
@@ -92,7 +113,7 @@ void drawRects(){
         // SDL_FillRect(surface, &rects[i].rect, SDLColorToUint32(rects[i].color));
         SDL_RenderFillRect(render, &rects[i].rect);
     }
-    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+    SDL_SetRenderDrawColor(renderer, black.r, black.g, black.b, black.a);
 }
 
 void render(){
@@ -106,18 +127,26 @@ void render(){
 void update(double deltaTime){
     bubbleSort();
 }
- int i = 0, j = 0;
+
+void stop(){
+    if(window != NULL)
+        SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+
+int i = 0, j = 0;
+struct Bar* lastCompared = NULL;
 
 void bubbleSort(){
+
     if(i < NUM_SIZE - 1) {
         if(j < NUM_SIZE - i - 1){
-
-            rects[j].color = green;
-            rects[j+1].color = purple;
-
-            if(j > 0){
-                rects[j-1].color = orange;
+            if(lastCompared != NULL){
+                lastCompared->color = white;
             }
+            rects[j].color = orange;
+            rects[j + 1].color = purple;
 
             if(rects[j].rect.h > rects[j + 1].rect.h){
                 struct Bar temp = rects[j];
@@ -132,16 +161,33 @@ void bubbleSort(){
                 rects[j + 1].color = temp.color;
             }
 
-            SDL_Delay(20);
+            lastCompared = &rects[j];
+
+            SDL_Delay(sortDelay);
             j++;
         } else {
             i++;
             j = 0;
         }
+    } else {
+        i = 0;
+        sorting = FALSE;
+        finalizing = TRUE;
     }
 
 }
 
+void finishSort(){
+    if(i < NUM_SIZE){
+        rects[i].color = green;
+        SDL_Delay(10);
+        i++;
+    } else {
+        finalizing = FALSE;
+    }
+}
+
+// Just a fun method to change the colors
 void discoBars(){
     if(i < NUM_SIZE){
         rects[i].color = getRandomColor();
@@ -149,13 +195,9 @@ void discoBars(){
     } else {
         i = 0;
     }
+    SDL_Delay(2);
 }
 
-double getDeltaTime(){
-    lastTime = currentTime;
-    currentTime = SDL_GetPerformanceCounter();
-    return (double)((currentTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency() );
-}
 
 SDL_Color getRandomColor(){
     SDL_Color color;
@@ -164,8 +206,4 @@ SDL_Color getRandomColor(){
     color.b = rand() % 255;
     color.a = rand() % 255;
     return color;
-}
-
-Uint32 SDLColorToUint32(SDL_Color color){
-    return (Uint32)((color.r << 16) + (color.g << 8) + (color.b << 0));
 }
